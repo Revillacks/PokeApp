@@ -1,4 +1,8 @@
 
+/* navbar.component.css */
+.navbar {
+  z-index: 10; /* Asegúrate de que la navbar esté por encima de otros elementos */
+}
 
 .navbar img {
   max-width: auto;  /* Adjust the width as needed */

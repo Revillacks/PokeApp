@@ -16,8 +16,17 @@ export class AppComponent {
   deferredPrompt: any;
   showInstallButton = false;
   isAppInstalled = false;
-  
-constructor(private http: HttpClient) {
+
+  constructor(private http: HttpClient) {
+    // Escucha el evento beforeinstallprompt
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      this.deferredPrompt = event;
+      if (!this.isAppInstalled) {
+        this.showInstallButton = true;
+      }
+    });
+
     // Evento de instalación
     window.addEventListener('appinstalled', () => {
       this.isAppInstalled = true;
@@ -25,16 +34,16 @@ constructor(private http: HttpClient) {
     });
   }
 
-  // Método para instalar la PWA
-  installPWA() {
-    if (this.isAppInstalled) {
-      alert('La aplicación ya está instalada.');
-    } else if (this.deferredPrompt) {
-      this.deferredPrompt.prompt();
-      this.deferredPrompt.userChoice.then((choiceResult: any) => {
-        this.deferredPrompt = null;
-      });
+    // Método para instalar la PWA
+    installPWA() {
+      if (this.isAppInstalled) {
+        alert('La aplicación ya está instalada.');
+      } else if (this.deferredPrompt) {
+        this.deferredPrompt.prompt();
+        this.deferredPrompt.userChoice.then((choiceResult: any) => {
+          this.deferredPrompt = null;
+        });
+      }
     }
-  }
+    
 }
-
