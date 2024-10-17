@@ -11,11 +11,18 @@ export class PokemonService {
   constructor(private http: HttpClient) {}
 
   getPokemons(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}?limit=20`).pipe(
-      switchMap((response) => {
-        // Hacemos que `forkJoin` sepa que estamos esperando un array de respuestas con detalles de los Pokémon.
-        const pokemonDetailsRequests: Observable<any>[] = response.results.map((pokemon: any) => this.http.get<any>(pokemon.url));
-        return forkJoin(pokemonDetailsRequests);  // Indicamos que `forkJoin` devuelve un array de cualquier tipo (any[])
+    const limit = 200;  // Limitar a 200 por página
+    const requests = [];
+
+    for (let offset = 0; offset < 1000; offset += limit) {  // 1000 para 5 páginas, ajusta según necesidad
+      requests.push(this.http.get<any>(`${this.apiUrl}?limit=${limit}&offset=${offset}`));
+    }
+
+    return forkJoin(requests).pipe(
+      switchMap((responses: any[]) => {
+        const allResults = responses.flatMap(response => response.results);
+        const pokemonDetailsRequests: Observable<any>[] = allResults.map((pokemon: any) => this.http.get<any>(pokemon.url));
+        return forkJoin(pokemonDetailsRequests);
       })
     );
   }

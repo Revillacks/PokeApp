@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-pokemon-list',
   standalone: true,
-  imports: [ CommonModule, FormsModule ],
+  imports: [ CommonModule, FormsModule],
   templateUrl: './pokemon-list.component.html',
   styleUrl: './pokemon-list.component.css'
 })
@@ -24,12 +24,9 @@ export class PokemonListComponent implements OnInit {
   ngOnInit(): void {
     this.pokemonService.getPokemons().subscribe((response) => {
       this.pokemons = response;
+      this.filteredPokemons = this.pokemons;  // Inicializar con la lista completa
       console.log(this.pokemons);
     });
-  }
-
-  ngOnChanges(): void {
-    this.filterPokemons();
   }
 
   filterPokemons(): void {
