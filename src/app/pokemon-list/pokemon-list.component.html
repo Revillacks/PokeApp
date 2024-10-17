@@ -1,0 +1,9 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <ng-container >
+    @for ( pokemon of pokemons; track pokemon; let i = $index){
+    <div class="bg-gray-800 text-white p-4 rounded-lg shadow-md">
+      <h2 class="text-xl font-bold">{{ pokemon.name | uppercase }}</h2>
+    </div>
+  }
+  </ng-container>
+</div>
